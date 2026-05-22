@@ -23,7 +23,7 @@ const Q1 = {
 // Q2 — Essay: explain why
 const Q2 = {
   id: 'q2_explain',
-  title: 'Theo bạn, vì sao tỷ lệ có xe ở hai cánh cửa cuối cùng không chia đều 50-50?',
+  title: 'Theo bạn, vì sao tỷ lệ có xe ở hai cánh cửa cuối cùng có chia đều 50-50 không? Vì sao?',
   hint: 'Trả lời ngắn 2–4 câu. Hãy xét xác suất ở lựa chọn đầu tiên (trước khi MC mở cửa) và ảnh hưởng từ việc MC cố tình loại đi một con dê.',
   modelAnswer: [
     'Lúc đầu, xác suất chọn đúng cửa có xe là 1/3, xác suất chọn trúng dê là 2/3.',
