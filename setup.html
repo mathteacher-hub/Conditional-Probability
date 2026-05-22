@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hướng dẫn cài đặt · Monty Hall</title>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .doc { max-width: 760px; padding: 60px 32px; margin: 0 auto; }
+    .doc h1 { font-size: 48px; margin-bottom: 16px; }
+    .doc h2 { font-size: 26px; margin-top: 48px; margin-bottom: 12px; padding-top: 16px; border-top: 1px solid var(--rule); }
+    .doc ol { padding-left: 22px; color: var(--ink-soft); }
+    .doc ol li { margin: 10px 0; }
+    .doc pre {
+      background: var(--bg-card);
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      padding: 16px 18px;
+      overflow-x: auto;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--ink);
+    }
+    .doc code { font-family: var(--mono); font-size: 13px; background: var(--bg-soft); padding: 2px 6px; border-radius: 3px; }
+    .doc .note {
+      padding: 16px 20px;
+      background: var(--teal-soft);
+      border-left: 3px solid var(--teal);
+      border-radius: 6px;
+      margin: 20px 0;
+    }
+    .doc .note p { margin: 0; color: var(--ink); }
+    .back {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      color: var(--ink-soft);
+      text-decoration: none;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .back:hover { color: var(--ink); }
+  </style>
+</head>
+<body class="theme-warm">
+  <div class="doc">
+    <a class="back" href="index.html">← Quay lại bài học</a>
+    <p class="eyebrow"><span class="num">i</span>Hướng dẫn cho giáo viên</p>
+    <h1>Thu thập câu trả lời của học sinh</h1>
+    <p class="lede">Học liệu này gửi câu trả lời của học sinh tới một <strong>Google Sheet</strong> qua Google Apps Script. Việc cài đặt mất khoảng 5 phút và hoàn toàn miễn phí.</p>
+
+    <h2>Bước 1 · Tạo Google Sheet</h2>
+    <ol>
+      <li>Mở <a href="https://sheets.new" target="_blank">sheets.new</a> để tạo một Sheet mới.</li>
+      <li>Đặt tên: ví dụ <code>Monty Hall — Lớp 11A</code>.</li>
+      <li>Thêm hàng tiêu đề cột đầu tiên (gợi ý):
+        <pre>timestamp | name | classroom | q1_answer | q1_correct | q2_answer | games_played | swap_wins | swap_total | stay_wins | stay_total</pre>
+      </li>
+    </ol>
+
+    <h2>Bước 2 · Tạo Apps Script</h2>
+    <ol>
+      <li>Trong Sheet, vào menu <code>Extensions → Apps Script</code>.</li>
+      <li>Xoá toàn bộ code mẫu và dán đoạn sau:</li>
+    </ol>
+
+    <pre>function doPost(e) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  const data = JSON.parse(e.postData.contents);
+  sheet.appendRow([
+    data.timestamp,
+    data.name,
+    data.classroom,
+    data.q1_answer,
+    data.q1_correct,
+    data.q2_answer,
+    data.games_played,
+    data.swap_wins,
+    data.swap_total,
+    data.stay_wins,
+    data.stay_total
+  ]);
+  return ContentService
+    .createTextOutput(JSON.stringify({ status: 'ok' }))
+    .setMimeType(ContentService.MimeType.JSON);
+}</pre>
+
+    <h2>Bước 3 · Triển khai Web App</h2>
+    <ol>
+      <li>Bấm nút <strong>Deploy → New deployment</strong>.</li>
+      <li>Chọn loại: <strong>Web app</strong>.</li>
+      <li>Cấu hình:
+        <ul>
+          <li><code>Execute as</code>: <strong>Me</strong> (tài khoản của bạn)</li>
+          <li><code>Who has access</code>: <strong>Anyone</strong></li>
+        </ul>
+      </li>
+      <li>Bấm <strong>Deploy</strong>, cấp quyền cho ứng dụng nếu được yêu cầu.</li>
+      <li>Sao chép <strong>Web app URL</strong> (dạng <code>https://script.google.com/macros/s/.../exec</code>).</li>
+    </ol>
+
+    <h2>Bước 4 · Gắn URL vào bài học</h2>
+    <ol>
+      <li>Mở <a href="index.html">bài học</a>.</li>
+      <li>Bật bảng <strong>Tweaks</strong> ở góc dưới-phải.</li>
+      <li>Dán URL vào ô <strong>Google Sheet URL</strong>.</li>
+      <li>Hoàn tất! Câu trả lời của học sinh sẽ tự động ghi vào Sheet.</li>
+    </ol>
+
+    <div class="note">
+      <p><strong>Lưu ý kỹ thuật.</strong> Vì Apps Script không trả về CORS headers, bài học gửi request ở chế độ <code>no-cors</code> — nghĩa là trình duyệt sẽ ghi nhận thành công ngay cả khi server lỗi. Hãy mở Sheet để kiểm tra dữ liệu thực tế đã ghi chưa.</p>
+    </div>
+
+    <h2>Phương án thay thế: Firebase</h2>
+    <p>Nếu bạn muốn dùng Firebase Firestore, hãy mở file <code>questions.jsx</code> và thay hàm <code>submitToSheet()</code> bằng đoạn gọi <code>addDoc(collection(db, 'monty-hall'), payload)</code>. Bạn cần thêm SDK Firebase vào <code>index.html</code> và khởi tạo app với cấu hình của project mình.</p>
+
+    <p style="margin-top:48px"><a class="back" href="index.html">← Quay lại bài học</a></p>
+  </div>
+</body>
+</html>
