@@ -77,7 +77,7 @@ function App() {
 
     setSubmitStatus({ state: 'sending', msg: 'Đang gửi...' });
     const payload = {
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toLocaleString('vi-VN'),
       name: info.name.trim(),
       classroom: info.classroom.trim(),
       q1_answer: a1,
