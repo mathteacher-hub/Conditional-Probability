@@ -206,7 +206,8 @@ p.lede { font-size: 21px; line-height: 1.5; color: var(--ink); }
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
-  margin: 8px 0 0;
+  margin: 8px auto 0; /* Đổi thành auto ở hai bên để căn giữa cụm cửa */
+  max-width: 680px; /* Thêm giới hạn chiều rộng. Có thể giảm xuống 600px - 640px nếu muốn cửa nhỏ hơn nữa */
 }
 .door-wrap { display: flex; flex-direction: column; align-items: center; gap: 14px; }
 
