@@ -394,34 +394,36 @@ p.lede { font-size: 21px; line-height: 1.5; color: var(--ink); }
 .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
 
 /* ===== Stats strip (compact, inside game section) ===== */
+/* ===== Stats strip (compact, inside game section) ===== */
 .stats-strip {
   margin-top: 24px;
-  padding: 22px 24px;
+  padding: 24px 28px; /* Tăng padding để tổng thể bảng thoáng hơn */
   background: var(--bg-card);
   border: 1px solid var(--rule);
-  border-radius: 14px;
+  border-radius: 16px;
 }
 .stats-strip-head {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 14px;
+  margin-bottom: 18px;
 }
 .stats-title {
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.14em;
+  font-family: var(--sans); /* Chuyển từ mono sang sans để tiêu đề dễ đọc hơn */
+  font-size: 14px; /* Tăng từ 11px */
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--ink-mute);
+  color: var(--ink); /* Đổi sang màu --ink đậm hơn thay vì --ink-mute */
+  font-weight: 700;
 }
 .stats-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
+  gap: 12px; /* Khoảng cách giữa 3 cột rộng hơn */
 }
 .stat-mini {
-  padding: 14px 16px;
-  border-radius: 10px;
+  padding: 18px 20px; /* Thêm không gian bên trong mỗi khối */
+  border-radius: 12px;
   background: var(--bg-soft);
   position: relative;
 }
@@ -430,33 +432,39 @@ p.lede { font-size: 21px; line-height: 1.5; color: var(--ink); }
 .stat-mini.total { background: oklch(0.95 0.03 70); }
 .stat-mini-label {
   font-family: var(--mono);
-  font-size: 10.5px;
+  font-size: 12px; /* Tăng từ 10.5px */
   letter-spacing: 0.10em;
   text-transform: uppercase;
-  color: var(--ink-mute);
-  margin-bottom: 6px;
+  color: var(--ink-soft); /* Dùng --ink-soft để tăng độ tương phản so với --ink-mute cũ */
+  margin-bottom: 8px;
   display: flex;
   align-items: center;
   gap: 6px;
+  font-weight: 600;
 }
-.stat-mini-label .dot { width: 7px; height: 7px; border-radius: 50%; }
+.stat-mini-label .dot { width: 8px; height: 8px; border-radius: 50%; } /* Chấm màu to hơn một chút */
 .stat-mini.swap .stat-mini-label .dot { background: var(--moss); }
 .stat-mini.stay .stat-mini-label .dot { background: var(--rust); }
 .stat-mini-value {
   font-family: var(--serif);
-  font-size: 32px;
+  font-size: 42px; /* Tăng số đếm từ 32px lên 42px tạo điểm nhấn */
   line-height: 1;
   color: var(--ink);
   font-feature-settings: "tnum";
-  margin-bottom: 4px;
+  margin-bottom: 6px;
+  font-weight: 500;
 }
 .stat-mini-sub {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--ink-mute);
-  letter-spacing: 0.02em;
+  font-family: var(--sans); /* Chuyển từ mono sang sans vì đoạn này chứa nhiều text tiếng Việt bình thường */
+  font-size: 14px; /* Tăng từ 11px */
+  color: var(--ink-soft);
+  letter-spacing: 0.01em;
 }
-.stat-mini-sub strong { color: var(--ink); font-weight: 600; }
+.stat-mini-sub strong { 
+  color: var(--ink); 
+  font-weight: 700; 
+  font-size: 15px; 
+}
 
 /* (legacy big stat grid styles kept in case used elsewhere — minimal footprint) */
 
