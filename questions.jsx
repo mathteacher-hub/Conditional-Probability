@@ -23,13 +23,13 @@ const Q1 = {
 // Q2 — Essay: explain why
 const Q2 = {
   id: 'q2_explain',
-  title: 'Vì sao xác suất thắng khi đổi cửa là 2/3 (chứ không phải 1/2)?',
-  hint: 'Trả lời ngắn 2–4 câu. Có thể dùng khái niệm xác suất có điều kiện P(A|B) hoặc liệt kê các trường hợp.',
+  title: 'Theo bạn, vì sao tỷ lệ có xe ở hai cánh cửa cuối cùng không chia đều 50-50?',
+  hint: 'Trả lời ngắn 2–4 câu. Hãy xét xác suất ở lựa chọn đầu tiên (trước khi MC mở cửa) và ảnh hưởng từ việc MC cố tình loại đi một con dê.',
   modelAnswer: [
-    'Lúc đầu, xác suất chọn đúng cửa có xe là 1/3, xác suất chọn nhầm (chọn cửa dê) là 2/3.',
-    'Khi MC mở một cửa dê, thông tin này KHÔNG làm thay đổi xác suất ban đầu của cửa bạn chọn — vẫn là 1/3.',
-    'Vì tổng xác suất bằng 1, nên toàn bộ 2/3 xác suất còn lại "dồn" vào cánh cửa còn chưa mở. Do đó đổi cửa cho xác suất thắng = 2/3.',
-    'Dùng công thức Bayes: P(xe ở cửa kia | MC mở cửa dê) = 2/3.'
+    'Lúc đầu, xác suất chọn đúng cửa có xe là 1/3, xác suất chọn trúng dê là 2/3.',
+    'Khi MC (người biết rõ vị trí phần thưởng) loại đi một cửa có dê, hành động có chủ đích này không làm thay đổi xác suất của cánh cửa bạn đã chọn ban đầu.',
+    'Xác suất cửa ban đầu vẫn giữ nguyên là 1/3. Do tổng xác suất của hệ bằng 1, nên 2/3 xác suất còn lại buộc phải "dồn" toàn bộ sang cánh cửa chưa mở kia.',
+    'Vì vậy, hai cửa không chia đều 50-50, mà chiến lược đổi cửa mang lại lợi thế thắng cao gấp đôi (2/3).'
   ]
 };
 
