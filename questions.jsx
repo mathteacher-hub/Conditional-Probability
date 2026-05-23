@@ -45,13 +45,6 @@ function Question1({ answer, onAnswer, submitted }) {
           </label>
         ))}
       </div>
-      {submitted && answer && (
-        <div className={'feedback' + (answer === Q1.correct ? '' : ' is-wrong')}>
-          <div className="verdict">{answer === Q1.correct ? '✓ Câu trả lời đúng' : '✗ Chưa đúng'}</div>
-          <p>{answer === Q1.correct ? Q1.explanation.correct : Q1.explanation.wrong}</p>
-          <p style={{marginTop:8}}><span className="key">P(thắng | đổi) = 2/3</span>{' '}<span className="key">P(thắng | giữ) = 1/3</span></p>
-        </div>
-      )}
     </div>
   );
 }
