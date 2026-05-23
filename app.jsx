@@ -3,7 +3,7 @@ const { useState: useS, useEffect: useE } = React;
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "theme": "warm",
   "doorStyle": "classic",
-  "sheetEndpoint": "https://script.google.com/macros/s/AKfycbyjR6u_1EA1nTyUDM1TilvzTVvysCtALddfrHpGO7kyUqVdcpGModq7e86w9GwMgtJL7g/exec"
+  "sheetEndpoint": "https://script.google.com/macros/s/AKfycbzwBZxSjMeaXXmUxQjnPFcZIPM-kXZt6VM7tTMtlHIAaOiIvACIOQ2hp9nsDKV-FJCZfQ/exec"
 } /*EDITMODE-END*/;
 
 function HeroDoorsArt() {
