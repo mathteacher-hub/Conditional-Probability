@@ -5,7 +5,7 @@ const { useState: useS, useEffect: useE } = React;
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "theme": "warm",
   "doorStyle": "classic",
-  "sheetEndpoint": "https://script.google.com/macros/s/AKfycbwB9A_oatOCl8j3iJ5TPcJg1RtLlC6UInwvCkY3U7qghahMbKtFZwys7dEBT2Q4zkuI0A/exec"
+  "sheetEndpoint": "" // NHỚ DÁN LẠI LINK GOOGLE APPS SCRIPT CỦA BẠN VÀO ĐÂY
 } /*EDITMODE-END*/;
 
 function HeroDoorsArt() {
@@ -22,8 +22,8 @@ function HeroDoorsArt() {
         <circle cx="140" cy="6" r="5" fill="var(--gold-deep)" />
         <circle cx="234" cy="6" r="3" fill="var(--ink-mute)" />
       </g>
-    </svg>);
-
+    </svg>
+  );
 }
 
 function App() {
@@ -40,6 +40,7 @@ function App() {
     swap: { wins: 0, total: 0 },
     stay: { wins: 0, total: 0 }
   });
+  
   function recordOutcome(strategy, won) {
     setTally((prev) => ({
       ...prev,
@@ -57,7 +58,11 @@ function App() {
   // ── Student info & answers ──
   const [info, setInfo] = useS({ name: '', classroom: '' });
   const [a1, setA1] = useS(null);
-  const [a2, setA2] = useS('');
+  
+  // State cho Khảo sát ngoại khoá
+  const [gender, setGender] = useS(''); 
+  const [badminton, setBadminton] = useS('');
+  
   const [submitted, setSubmitted] = useS(false);
   const [submitStatus, setSubmitStatus] = useS({ state: 'idle', msg: '' });
 
@@ -66,28 +71,29 @@ function App() {
       setSubmitStatus({ state: 'err', msg: 'Vui lòng điền Họ tên và Lớp.' });
       return;
     }
+    if (!gender || !badminton) {
+      setSubmitStatus({ state: 'err', msg: 'Vui lòng hoàn thành mục Khảo sát ngoại khóa.' });
+      return;
+    }
     if (!a1) {
       setSubmitStatus({ state: 'err', msg: 'Vui lòng trả lời Câu 1.' });
       return;
     }
-    if (a2.trim().length < 10) {
-      setSubmitStatus({ state: 'err', msg: 'Câu 2 cần ít nhất 10 ký tự.' });
-      return;
-    }
 
     setSubmitStatus({ state: 'sending', msg: 'Đang gửi...' });
+    
     const payload = {
       timestamp: new Date().toLocaleString('vi-VN'),
       name: info.name.trim(),
       classroom: info.classroom.trim(),
-      q1_answer: a1,
-      q1_correct: a1 === Q1.correct,
-      q2_answer: a2.trim(),
+      gender: gender,
+      badminton: badminton,
       games_played: tally.swap.total + tally.stay.total,
-      swap_wins: tally.swap.wins,
       swap_total: tally.swap.total,
+      swap_wins: tally.swap.wins,
+      stay_total: tally.stay.total,
       stay_wins: tally.stay.wins,
-      stay_total: tally.stay.total
+      q1_answer: a1
     };
 
     const result = await submitToSheet(t.sheetEndpoint, payload);
@@ -96,7 +102,7 @@ function App() {
       setSubmitStatus({
         state: 'ok',
         msg: result.demo ?
-        'Đã ghi nhận (chế độ demo — xem console). Cài đặt Google Sheet URL trong Tweaks để lưu thật.' :
+        'Đã ghi nhận (chế độ demo). Cài đặt Google Sheet URL trong Tweaks để lưu thật.' :
         'Đã gửi câu trả lời thành công. Cảm ơn bạn!'
       });
     } else {
@@ -129,7 +135,7 @@ function App() {
           </div>
         </section>
 
-        {/* ─── GAME + STATS (merged) ─── */}
+        {/* ─── GAME + STATS ─── */}
         <section className="section">
           <h2 className="h2-with-num"><span className="num">02</span>Hãy thử chơi vài lượt</h2>
           <p>Chọn một cửa, xem MC mở cửa dê, rồi quyết định <strong>đổi</strong> hoặc <strong>giữ</strong>. Mỗi lượt sẽ được ghi vào thống kê của bạn bên dưới.</p>
@@ -140,77 +146,3 @@ function App() {
           
           <MontyStats tally={tally} onReset={resetStats} />
         </section>
-
-        {/* ─── QUESTIONS ─── */}
-        <section className="section">
-          <h2 className="h2-with-num"><span className="num">03</span>Hai câu hỏi cho bạn</h2>
-          <p>Sau khi đã chơi và xem thống kê, hãy trả lời hai câu sau. Câu trả lời sẽ được gửi cho giáo viên.</p>
-
-          <div className="form-card">
-            <div className="form-label">Thông tin học sinh</div>
-            <StudentInfoFields info={info} onChange={setInfo} />
-          </div>
-
-          <Question1 answer={a1} onAnswer={setA1} submitted={submitted} />
-          <Question2 answer={a2} onAnswer={setA2} submitted={submitted} />
-
-          <div className="submit-bar">
-            <span className={'status ' + (submitStatus.state === 'ok' ? 'ok' : submitStatus.state === 'err' ? 'err' : '')}>
-              {submitStatus.msg || (submitted ? '' : 'Cả hai câu hỏi đều bắt buộc.')}
-            </span>
-            {!submitted ?
-            <button
-              className="btn primary"
-              onClick={handleSubmit}
-              disabled={submitStatus.state === 'sending'}>
-              
-                {submitStatus.state === 'sending' ? 'Đang gửi…' : 'Gửi câu trả lời →'}
-              </button> :
-
-            <button className="btn secondary" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-                ↑ Quay lên đầu trang
-              </button>
-            }
-          </div>
-        </section>
-
-        <div className="footer">
-          <span>© Học liệu tương tác · Xác suất có điều kiện</span>
-          <span>Bật Tweaks (góc phải) để đổi giao diện hoặc cài Google Sheet</span>
-        </div>
-      </div>
-
-      {/* ─── Tweaks panel ─── */}
-      <TweaksPanel>
-        <TweakSection label="Giao diện" />
-        <TweakRadio
-          label="Tông màu"
-          value={t.theme}
-          options={['warm', 'night', 'sage']}
-          onChange={(v) => setTweak('theme', v)} />
-        
-        <TweakRadio
-          label="Kiểu cửa"
-          value={t.doorStyle}
-          options={['classic', 'box', 'card']}
-          onChange={(v) => setTweak('doorStyle', v)} />
-        
-
-        <TweakSection label="Thu thập dữ liệu" />
-        <TweakText
-          label="Google Sheet URL"
-          value={t.sheetEndpoint}
-          placeholder="https://script.google.com/.../exec"
-          onChange={(v) => setTweak('sheetEndpoint', v)} />
-        
-        <div style={{ fontSize: 11, color: 'rgba(41,38,27,0.55)', lineHeight: 1.5, padding: '2px 0' }}>
-          Dán URL của Google Apps Script Web App vào đây. Nếu để trống, hệ thống chạy ở chế độ demo (log ra console).
-          <br />
-          <a href="setup.html" target="_blank" style={{ color: 'var(--teal)' }}>📖 Hướng dẫn cài đặt</a>
-        </div>
-      </TweaksPanel>
-    </div>);
-
-}
-
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
