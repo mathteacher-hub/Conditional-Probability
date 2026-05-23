@@ -5,7 +5,7 @@ const { useState: useS, useEffect: useE } = React;
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "theme": "warm",
   "doorStyle": "classic",
-  "sheetEndpoint": "" // NHỚ DÁN LẠI LINK GOOGLE APPS SCRIPT CỦA BẠN VÀO ĐÂY
+  "sheetEndpoint": "https://script.google.com/macros/s/AKfycbwB9A_oatOCl8j3iJ5TPcJg1RtLlC6UInwvCkY3U7qghahMbKtFZwys7dEBT2Q4zkuI0A/exec" // NHỚ DÁN LẠI LINK GOOGLE APPS SCRIPT CỦA BẠN VÀO ĐÂY
 } /*EDITMODE-END*/;
 
 function HeroDoorsArt() {
