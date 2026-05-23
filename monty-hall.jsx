@@ -46,24 +46,19 @@ function Door({ index, doorStyle, state, content, onClick, label }) {
         <span className="knob" />
         <span className="number">{index + 1}</span>
         <div className="reveal">
-          {state === 'open-car' && (
-            <div className="reveal-icon car">
-              ★<span className="small">Xe ô tô</span>
-            </div>
-          )}
-          {(state === 'open-goat' || state === 'host-opened') && (
-            <div className="reveal-icon goat">
-              ◎<span className="small">Con dê</span>
-            </div>
-          )}
-        </div>
-      </div>
-      <div className={[
-        'door-label',
-        isChosen ? 'is-chosen' : '',
-        state === 'host-opened' ? 'is-revealed' : ''
-      ].join(' ')}>{label || '\u00A0'}</div>
+  {state === 'open-car' && (
+    <div className="reveal-icon car">
+      <img src="xe.jpg" alt="Xe ô tô"
+        style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '6px' }} />
     </div>
+  )}
+  {(state === 'open-goat' || state === 'host-opened') && (
+    <div className="reveal-icon goat">
+      <img src="dê.jpg" alt="Con dê"
+        style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '6px' }} />
+    </div>
+  )}
+</div>
   );
 }
 
