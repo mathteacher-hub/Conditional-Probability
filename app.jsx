@@ -1,11 +1,9 @@
-// app.jsx — Main learning page
-
 const { useState: useS, useEffect: useE } = React;
 
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "theme": "warm",
   "doorStyle": "classic",
-  "sheetEndpoint": "https://script.google.com/macros/s/AKfycbwB9A_oatOCl8j3iJ5TPcJg1RtLlC6UInwvCkY3U7qghahMbKtFZwys7dEBT2Q4zkuI0A/exec" // NHỚ DÁN LẠI LINK GOOGLE APPS SCRIPT CỦA BẠN VÀO ĐÂY
+  "sheetEndpoint": ""
 } /*EDITMODE-END*/;
 
 function HeroDoorsArt() {
@@ -29,13 +27,11 @@ function HeroDoorsArt() {
 function App() {
   const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
 
-  // Apply theme to body
   useE(() => {
     document.body.classList.remove('theme-warm', 'theme-night', 'theme-sage');
     document.body.classList.add('theme-' + t.theme);
   }, [t.theme]);
 
-  // ── Game tally state ──
   const [tally, setTally] = useS({
     swap: { wins: 0, total: 0 },
     stay: { wins: 0, total: 0 }
@@ -55,14 +51,10 @@ function App() {
     setTally({ swap: { wins: 0, total: 0 }, stay: { wins: 0, total: 0 } });
   }
 
-  // ── Student info & answers ──
   const [info, setInfo] = useS({ name: '', classroom: '' });
   const [a1, setA1] = useS(null);
-  
-  // State cho Khảo sát ngoại khoá
   const [gender, setGender] = useS(''); 
   const [badminton, setBadminton] = useS('');
-  
   const [submitted, setSubmitted] = useS(false);
   const [submitStatus, setSubmitStatus] = useS({ state: 'idle', msg: '' });
 
@@ -102,7 +94,7 @@ function App() {
       setSubmitStatus({
         state: 'ok',
         msg: result.demo ?
-        'Đã ghi nhận (chế độ demo). Cài đặt Google Sheet URL trong Tweaks để lưu thật.' :
+        'Đã ghi nhận. Cài đặt Google Sheet URL trong Tweaks để lưu thật.' :
         'Đã gửi câu trả lời thành công. Cảm ơn bạn!'
       });
     } else {
@@ -118,7 +110,6 @@ function App() {
           <span></span>
         </div>
 
-        {/* ─── HERO ─── */}
         <section className="hero">
           <h1 className="h1-with-num"><span className="num">01</span>Bài toán <em>Monty&nbsp;Hall</em></h1>
           <div className="hero-body">
@@ -135,19 +126,13 @@ function App() {
           </div>
         </section>
 
-        {/* ─── GAME + STATS ─── */}
         <section className="section">
           <h2 className="h2-with-num"><span className="num">02</span>Hãy thử chơi vài lượt</h2>
           <p>Chọn một cửa, xem MC mở cửa dê, rồi quyết định <strong>đổi</strong> hoặc <strong>giữ</strong>. Mỗi lượt sẽ được ghi vào thống kê của bạn bên dưới.</p>
-          <MontyHallGame
-            doorStyle={t.doorStyle}
-            tally={tally}
-            onTallyChange={recordOutcome} />
-          
+          <MontyHallGame doorStyle={t.doorStyle} tally={tally} onTallyChange={recordOutcome} />
           <MontyStats tally={tally} onReset={resetStats} />
         </section>
 
-        {/* ─── QUESTIONS ─── */}
         <section className="section">
           <h2 className="h2-with-num"><span className="num">03</span>Tổng kết bài học</h2>
           <p>Hãy hoàn thành khảo sát và trả lời câu hỏi tổng kết. Kết quả sẽ được gửi cho giáo viên.</p>
@@ -157,11 +142,7 @@ function App() {
             <StudentInfoFields info={info} onChange={setInfo} />
           </div>
           
-          <ExtraSurvey 
-            gender={gender} setGender={setGender} 
-            badminton={badminton} setBadminton={setBadminton} 
-            submitted={submitted} 
-          />
+          <ExtraSurvey gender={gender} setGender={setGender} badminton={badminton} setBadminton={setBadminton} submitted={submitted} />
 
           <Question1 answer={a1} onAnswer={setA1} submitted={submitted} />
 
@@ -170,10 +151,7 @@ function App() {
               {submitStatus.msg || (submitted ? '' : 'Vui lòng hoàn thành các phần trên để nộp bài.')}
             </span>
             {!submitted ?
-            <button
-              className="btn primary"
-              onClick={handleSubmit}
-              disabled={submitStatus.state === 'sending'}>
+            <button className="btn primary" onClick={handleSubmit} disabled={submitStatus.state === 'sending'}>
                 {submitStatus.state === 'sending' ? 'Đang gửi…' : 'Gửi câu trả lời →'}
               </button> :
             <button className="btn secondary" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
@@ -189,32 +167,14 @@ function App() {
         </div>
       </div>
 
-      {/* ─── Tweaks panel ─── */}
       <TweaksPanel>
         <TweakSection label="Giao diện" />
-        <TweakRadio
-          label="Tông màu"
-          value={t.theme}
-          options={['warm', 'night', 'sage']}
-          onChange={(v) => setTweak('theme', v)} />
-        
-        <TweakRadio
-          label="Kiểu cửa"
-          value={t.doorStyle}
-          options={['classic', 'box', 'card']}
-          onChange={(v) => setTweak('doorStyle', v)} />
-        
+        <TweakRadio label="Tông màu" value={t.theme} options={['warm', 'night', 'sage']} onChange={(v) => setTweak('theme', v)} />
+        <TweakRadio label="Kiểu cửa" value={t.doorStyle} options={['classic', 'box', 'card']} onChange={(v) => setTweak('doorStyle', v)} />
         <TweakSection label="Thu thập dữ liệu" />
-        <TweakText
-          label="Google Sheet URL"
-          value={t.sheetEndpoint}
-          placeholder="https://script.google.com/.../exec"
-          onChange={(v) => setTweak('sheetEndpoint', v)} />
-        
+        <TweakText label="Google Sheet URL" value={t.sheetEndpoint} placeholder="https://script.google.com/.../exec" onChange={(v) => setTweak('sheetEndpoint', v)} />
         <div style={{ fontSize: 11, color: 'rgba(41,38,27,0.55)', lineHeight: 1.5, padding: '2px 0' }}>
           Dán URL của Google Apps Script Web App vào đây. Nếu để trống, hệ thống chạy ở chế độ demo (log ra console).
-          <br />
-          <a href="setup.html" target="_blank" style={{ color: 'var(--teal)' }}>📖 Hướng dẫn cài đặt</a>
         </div>
       </TweaksPanel>
     </div>
