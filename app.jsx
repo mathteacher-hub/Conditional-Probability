@@ -142,9 +142,9 @@ function App() {
             <StudentInfoFields info={info} onChange={setInfo} />
           </div>
           
-          <ExtraSurvey gender={gender} setGender={setGender} badminton={badminton} setBadminton={setBadminton} submitted={submitted} />
-
           <Question1 answer={a1} onAnswer={setA1} submitted={submitted} />
+
+          <ExtraSurvey gender={gender} setGender={setGender} badminton={badminton} setBadminton={setBadminton} submitted={submitted} />
 
           <div className="submit-bar">
             <span className={'status ' + (submitStatus.state === 'ok' ? 'ok' : submitStatus.state === 'err' ? 'err' : '')}>
@@ -163,7 +163,6 @@ function App() {
 
         <div className="footer">
           <span>© Học liệu tương tác · Xác suất có điều kiện</span>
-          <span>Bật Tweaks (góc phải) để đổi giao diện hoặc cài Google Sheet</span>
         </div>
       </div>
 
