@@ -525,11 +525,12 @@ p.lede { font-size: 21px; line-height: 1.5; color: var(--ink); }
   margin-top: 24px;
 }
 .form-label {
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--ink-mute);
+  font-family: var(--sans);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink);
   margin-bottom: 8px;
 }
 .form-input, .form-textarea {
@@ -583,8 +584,8 @@ p.lede { font-size: 21px; line-height: 1.5; color: var(--ink); }
   border-radius: 50%;
   background: var(--ink);
 }
-.choice .text { flex: 1; color: var(--ink); font-size: 16px; line-height: 1.4; }
-.choice .text small { display: block; color: var(--ink-mute); font-size: 13px; margin-top: 4px; }
+.choice .text { flex: 1; color: var(--ink); font-size: 18px; font-weight: 600; line-height: 1.4; }
+.choice .text small { display: block; color: var(--ink-mute); font-size: 14px; font-weight: 400; margin-top: 4px; }
 
 .q-card {
   background: var(--bg-card);
@@ -603,8 +604,8 @@ p.lede { font-size: 21px; line-height: 1.5; color: var(--ink); }
 }
 .q-title {
   font-family: var(--serif);
-  font-size: 28px;
-  line-height: 1.25;
+  font-size: 36px;
+  line-height: 1.2;
   margin: 0 0 6px;
   color: var(--ink);
 }
