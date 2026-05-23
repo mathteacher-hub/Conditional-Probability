@@ -11,10 +11,6 @@ const Q1 = {
     { id: 'idk', text: 'Không chắc chắn', sub: 'Cần thêm thời gian phân tích.' }
   ],
   correct: 'swap',
-  explanation: {
-    correct: 'Đúng. Khi đổi cửa, xác suất thắng là 2/3 ≈ 66.7%, gấp đôi so với khi giữ nguyên (1/3).',
-    wrong: 'Chưa đúng. Đáp án là ĐỔI CỬA. Xác suất thắng khi đổi là 2/3, gấp đôi xác suất khi giữ (1/3). Bạn hãy xem lại cây xác suất để thấy sự chênh lệch nhé.'
-  }
 };
 
 function StudentInfoFields({ info, onChange }) {
