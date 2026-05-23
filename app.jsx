@@ -146,3 +146,79 @@ function App() {
           
           <MontyStats tally={tally} onReset={resetStats} />
         </section>
+
+        {/* ─── QUESTIONS ─── */}
+        <section className="section">
+          <h2 className="h2-with-num"><span className="num">03</span>Tổng kết bài học</h2>
+          <p>Hãy hoàn thành khảo sát và trả lời câu hỏi tổng kết. Kết quả sẽ được gửi cho giáo viên.</p>
+
+          <div className="form-card">
+            <div className="form-label">Thông tin học sinh</div>
+            <StudentInfoFields info={info} onChange={setInfo} />
+          </div>
+          
+          <ExtraSurvey 
+            gender={gender} setGender={setGender} 
+            badminton={badminton} setBadminton={setBadminton} 
+            submitted={submitted} 
+          />
+
+          <Question1 answer={a1} onAnswer={setA1} submitted={submitted} />
+
+          <div className="submit-bar">
+            <span className={'status ' + (submitStatus.state === 'ok' ? 'ok' : submitStatus.state === 'err' ? 'err' : '')}>
+              {submitStatus.msg || (submitted ? '' : 'Vui lòng hoàn thành các phần trên để nộp bài.')}
+            </span>
+            {!submitted ?
+            <button
+              className="btn primary"
+              onClick={handleSubmit}
+              disabled={submitStatus.state === 'sending'}>
+                {submitStatus.state === 'sending' ? 'Đang gửi…' : 'Gửi câu trả lời →'}
+              </button> :
+            <button className="btn secondary" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+                ↑ Quay lên đầu trang
+              </button>
+            }
+          </div>
+        </section>
+
+        <div className="footer">
+          <span>© Học liệu tương tác · Xác suất có điều kiện</span>
+          <span>Bật Tweaks (góc phải) để đổi giao diện hoặc cài Google Sheet</span>
+        </div>
+      </div>
+
+      {/* ─── Tweaks panel ─── */}
+      <TweaksPanel>
+        <TweakSection label="Giao diện" />
+        <TweakRadio
+          label="Tông màu"
+          value={t.theme}
+          options={['warm', 'night', 'sage']}
+          onChange={(v) => setTweak('theme', v)} />
+        
+        <TweakRadio
+          label="Kiểu cửa"
+          value={t.doorStyle}
+          options={['classic', 'box', 'card']}
+          onChange={(v) => setTweak('doorStyle', v)} />
+        
+        <TweakSection label="Thu thập dữ liệu" />
+        <TweakText
+          label="Google Sheet URL"
+          value={t.sheetEndpoint}
+          placeholder="https://script.google.com/.../exec"
+          onChange={(v) => setTweak('sheetEndpoint', v)} />
+        
+        <div style={{ fontSize: 11, color: 'rgba(41,38,27,0.55)', lineHeight: 1.5, padding: '2px 0' }}>
+          Dán URL của Google Apps Script Web App vào đây. Nếu để trống, hệ thống chạy ở chế độ demo (log ra console).
+          <br />
+          <a href="setup.html" target="_blank" style={{ color: 'var(--teal)' }}>📖 Hướng dẫn cài đặt</a>
+        </div>
+      </TweaksPanel>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
