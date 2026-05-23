@@ -3,6 +3,55 @@
 
 const { useState, useEffect, useRef, useCallback } = React;
 
+// ─── Âm thanh ───────────────────────────────────────────────────────────
+function playSound(type) {
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+
+  if (type === 'pick') {
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(520, ctx.currentTime);
+    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+    osc.start(); osc.stop(ctx.currentTime + 0.15);
+
+  } else if (type === 'reveal') {
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(300, ctx.currentTime);
+    osc.frequency.linearRampToValueAtTime(180, ctx.currentTime + 0.3);
+    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+    osc.start(); osc.stop(ctx.currentTime + 0.3);
+
+  } else if (type === 'win') {
+    [0, 0.15, 0.3].forEach((t, i) => {
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.type = 'sine';
+      o.frequency.setValueAtTime([520, 660, 780][i], ctx.currentTime + t);
+      g.gain.setValueAtTime(0.25, ctx.currentTime + t);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + t + 0.2);
+      o.start(ctx.currentTime + t); o.stop(ctx.currentTime + t + 0.2);
+    });
+
+  } else if (type === 'lose') {
+    [0, 0.2].forEach((t, i) => {
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.type = 'sawtooth';
+      o.frequency.setValueAtTime([300, 220][i], ctx.currentTime + t);
+      g.gain.setValueAtTime(0.2, ctx.currentTime + t);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + t + 0.25);
+      o.start(ctx.currentTime + t); o.stop(ctx.currentTime + t + 0.25);
+    });
+  }
+}
+
 // ─── Game logic helpers ─────────────────────────────────────────────────
 function randInt(n) { return Math.floor(Math.random() * n); }
 
@@ -90,13 +139,17 @@ function MontyHallGame({ doorStyle, onTallyChange, tally }) {
 
   function handlePick(i) {
     if (phase !== 'idle') return;
+    playSound('pick');
     setPick(i);
     // Host picks a goat-door that isn't the player's pick
     const choices = [0, 1, 2].filter(d => d !== i && d !== car);
     const open = choices[randInt(choices.length)];
     setHostOpens(open);
     setPhase('picked');
-    setTimeout(() => setPhase('hostOpened'), 600);
+    setTimeout(() => {
+      setPhase('hostOpened');
+      playSound('reveal');
+    }, 600);
   }
 
   function decide(s) {
@@ -108,6 +161,7 @@ function MontyHallGame({ doorStyle, onTallyChange, tally }) {
     setPhase('final');
     const won = fp === car;
     onTallyChange(s, won);
+    playSound(won ? 'win' : 'lose');
   }
 
   // Determine door states
