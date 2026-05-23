@@ -1,8 +1,5 @@
-// questions.jsx — Student info form + two questions + Google Sheets submission
-
 const { useState: useStateQ } = React;
 
-// Q1 — Multiple choice: intuition about which strategy
 const Q1 = {
   id: 'q1_strategy',
   title: 'Theo bạn, chiến lược nào cho xác suất thắng cao hơn?',
@@ -25,23 +22,11 @@ function StudentInfoFields({ info, onChange }) {
     <div className="form-row">
       <div>
         <div className="form-label">Họ và tên</div>
-        <input
-          className="form-input"
-          type="text"
-          placeholder="VD: Nguyễn Văn An"
-          value={info.name}
-          onChange={e => onChange({ ...info, name: e.target.value })}
-        />
+        <input className="form-input" type="text" placeholder="VD: Nguyễn Văn An" value={info.name} onChange={e => onChange({ ...info, name: e.target.value })} />
       </div>
       <div>
         <div className="form-label">Lớp</div>
-        <input
-          className="form-input"
-          type="text"
-          placeholder="VD: 12A1"
-          value={info.classroom}
-          onChange={e => onChange({ ...info, classroom: e.target.value })}
-        />
+        <input className="form-input" type="text" placeholder="VD: 12A1" value={info.classroom} onChange={e => onChange({ ...info, classroom: e.target.value })} />
       </div>
     </div>
   );
@@ -53,44 +38,27 @@ function Question1({ answer, onAnswer, submitted }) {
       <div className="q-number">Câu hỏi 01 · Trắc nghiệm</div>
       <h3 className="q-title">{Q1.title}</h3>
       <p className="q-hint">{Q1.hint}</p>
-
       <div className="choices">
         {Q1.options.map(opt => (
-          <label
-            key={opt.id}
-            className={'choice' + (answer === opt.id ? ' is-selected' : '')}
-            onClick={() => !submitted && onAnswer(opt.id)}
-          >
-            <span className="radio" />
-            <span className="text">
-              {opt.text}
-              <small>{opt.sub}</small>
-            </span>
+          <label key={opt.id} className={'choice' + (answer === opt.id ? ' is-selected' : '')} onClick={() => !submitted && onAnswer(opt.id)}>
+            <span className="radio" /><span className="text">{opt.text}<small>{opt.sub}</small></span>
           </label>
         ))}
       </div>
-
       {submitted && answer && (
         <div className={'feedback' + (answer === Q1.correct ? '' : ' is-wrong')}>
-          <div className="verdict">
-            {answer === Q1.correct ? '✓ Câu trả lời đúng' : '✗ Chưa đúng'}
-          </div>
+          <div className="verdict">{answer === Q1.correct ? '✓ Câu trả lời đúng' : '✗ Chưa đúng'}</div>
           <p>{answer === Q1.correct ? Q1.explanation.correct : Q1.explanation.wrong}</p>
-          <p style={{marginTop:8}}>
-            <span className="key">P(thắng | đổi) = 2/3</span>{' '}
-            <span className="key">P(thắng | giữ) = 1/3</span>
-          </p>
+          <p style={{marginTop:8}}><span className="key">P(thắng | đổi) = 2/3</span>{' '}<span className="key">P(thắng | giữ) = 1/3</span></p>
         </div>
       )}
     </div>
   );
 }
 
-// ─── Extra Survey (Khảo sát ngoại khoá) ──────────────────────────────────
 function ExtraSurvey({ gender, setGender, badminton, setBadminton, submitted }) {
   const [show, setShow] = useStateQ(false);
   
-  // Trạng thái chưa bấm nút "Vào bài học"
   if (!show) {
     return (
       <div className="q-card" style={{ textAlign: 'center', padding: '40px 20px', borderLeft: '3px solid var(--teal)' }}>
@@ -101,33 +69,22 @@ function ExtraSurvey({ gender, setGender, badminton, setBadminton, submitted }) 
     );
   }
 
-  // Trạng thái đã bấm nút, hiện 2 câu hỏi
   return (
     <div className="q-card" style={{ borderLeft: '3px solid var(--teal)' }}>
       <div className="q-number" style={{ color: 'var(--teal)' }}>Khảo sát ngoại khóa</div>
-      
       <div className="form-row" style={{ marginTop: 16 }}>
         <div style={{ flex: 1 }}>
           <div className="form-label">Em là nam hay nữ?</div>
           <div className="choices">
-            <label className={'choice' + (gender === 'Nam' ? ' is-selected' : '')} onClick={() => !submitted && setGender('Nam')}>
-              <span className="radio" /><span className="text">Nam</span>
-            </label>
-            <label className={'choice' + (gender === 'Nữ' ? ' is-selected' : '')} onClick={() => !submitted && setGender('Nữ')}>
-              <span className="radio" /><span className="text">Nữ</span>
-            </label>
+            <label className={'choice' + (gender === 'Nam' ? ' is-selected' : '')} onClick={() => !submitted && setGender('Nam')}><span className="radio" /><span className="text">Nam</span></label>
+            <label className={'choice' + (gender === 'Nữ' ? ' is-selected' : '')} onClick={() => !submitted && setGender('Nữ')}><span className="radio" /><span className="text">Nữ</span></label>
           </div>
         </div>
-        
         <div style={{ flex: 1 }}>
           <div className="form-label">Em thích chơi cầu lông không?</div>
           <div className="choices">
-            <label className={'choice' + (badminton === 'Có' ? ' is-selected' : '')} onClick={() => !submitted && setBadminton('Có')}>
-              <span className="radio" /><span className="text">Có</span>
-            </label>
-            <label className={'choice' + (badminton === 'Không' ? ' is-selected' : '')} onClick={() => !submitted && setBadminton('Không')}>
-              <span className="radio" /><span className="text">Không</span>
-            </label>
+            <label className={'choice' + (badminton === 'Có' ? ' is-selected' : '')} onClick={() => !submitted && setBadminton('Có')}><span className="radio" /><span className="text">Có</span></label>
+            <label className={'choice' + (badminton === 'Không' ? ' is-selected' : '')} onClick={() => !submitted && setBadminton('Không')}><span className="radio" /><span className="text">Không</span></label>
           </div>
         </div>
       </div>
@@ -135,31 +92,24 @@ function ExtraSurvey({ gender, setGender, badminton, setBadminton, submitted }) 
   );
 }
 
-// ─── Submission ──────────────────────────────────────────────────────────
 async function submitToSheet(endpoint, payload) {
-  // Two paths:
-  // 1) Google Apps Script Web App: POST JSON to the /exec URL
-  // 2) Firebase: use a placeholder — student replaces this stub
   if (!endpoint || endpoint.includes('YOUR_DEPLOYMENT')) {
-    // Demo mode — just log
     console.log('[Submission demo] Payload:', payload);
     return { ok: true, demo: true };
   }
   try {
     const res = await fetch(endpoint, {
       method: 'POST',
-      mode: 'no-cors', // Apps Script doesn't return CORS headers by default
+      mode: 'no-cors',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(payload)
     });
-    // With no-cors we can't read the response, so we assume success if fetch didn't throw
     return { ok: true };
   } catch (err) {
     return { ok: false, error: err.message };
   }
 }
 
-// ─── Export ──────────────────────────────────────────────────────────────
 Object.assign(window, {
   StudentInfoFields, Question1, ExtraSurvey, submitToSheet, Q1
 });
