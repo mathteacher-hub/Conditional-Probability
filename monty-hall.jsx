@@ -4,52 +4,67 @@
 const { useState, useEffect, useRef, useCallback } = React;
 
 // ─── Âm thanh ───────────────────────────────────────────────────────────
-function playSound(type) {
-  const ctx = new (window.AudioContext || window.webkitAudioContext)();
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-
-  if (type === 'pick') {
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(520, ctx.currentTime);
-    gain.gain.setValueAtTime(0.3, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
-    osc.start(); osc.stop(ctx.currentTime + 0.15);
-
-  } else if (type === 'reveal') {
-    osc.type = 'triangle';
-    osc.frequency.setValueAtTime(300, ctx.currentTime);
-    osc.frequency.linearRampToValueAtTime(180, ctx.currentTime + 0.3);
-    gain.gain.setValueAtTime(0.2, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
-    osc.start(); osc.stop(ctx.currentTime + 0.3);
-
-  } else if (type === 'win') {
-    [0, 0.15, 0.3].forEach((t, i) => {
-      const o = ctx.createOscillator();
-      const g = ctx.createGain();
-      o.connect(g); g.connect(ctx.destination);
-      o.type = 'sine';
-      o.frequency.setValueAtTime([520, 660, 780][i], ctx.currentTime + t);
-      g.gain.setValueAtTime(0.25, ctx.currentTime + t);
-      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + t + 0.2);
-      o.start(ctx.currentTime + t); o.stop(ctx.currentTime + t + 0.2);
-    });
-
-  } else if (type === 'lose') {
-    [0, 0.2].forEach((t, i) => {
-      const o = ctx.createOscillator();
-      const g = ctx.createGain();
-      o.connect(g); g.connect(ctx.destination);
-      o.type = 'sawtooth';
-      o.frequency.setValueAtTime([300, 220][i], ctx.currentTime + t);
-      g.gain.setValueAtTime(0.2, ctx.currentTime + t);
-      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + t + 0.25);
-      o.start(ctx.currentTime + t); o.stop(ctx.currentTime + t + 0.25);
-    });
+// Dùng chung 1 AudioContext để tránh bị suspended trên laptop
+const _audioCtx = { current: null };
+function getCtx() {
+  if (!_audioCtx.current) {
+    _audioCtx.current = new (window.AudioContext || window.webkitAudioContext)();
   }
+  return _audioCtx.current;
+}
+
+function playSound(type) {
+  const ctx = getCtx();
+  const resume = ctx.state === 'suspended' ? ctx.resume() : Promise.resolve();
+  resume.then(() => {
+    const now = ctx.currentTime;
+
+    if (type === 'pick') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(520, now);
+      gain.gain.setValueAtTime(0.3, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+      osc.start(now); osc.stop(now + 0.15);
+
+    } else if (type === 'reveal') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(300, now);
+      osc.frequency.linearRampToValueAtTime(180, now + 0.3);
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+      osc.start(now); osc.stop(now + 0.3);
+
+    } else if (type === 'win') {
+      [0, 0.15, 0.3].forEach((t, i) => {
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.connect(g); g.connect(ctx.destination);
+        o.type = 'sine';
+        o.frequency.setValueAtTime([520, 660, 780][i], now + t);
+        g.gain.setValueAtTime(0.25, now + t);
+        g.gain.exponentialRampToValueAtTime(0.001, now + t + 0.2);
+        o.start(now + t); o.stop(now + t + 0.2);
+      });
+
+    } else if (type === 'lose') {
+      [0, 0.2].forEach((t, i) => {
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.connect(g); g.connect(ctx.destination);
+        o.type = 'sawtooth';
+        o.frequency.setValueAtTime([300, 220][i], now + t);
+        g.gain.setValueAtTime(0.2, now + t);
+        g.gain.exponentialRampToValueAtTime(0.001, now + t + 0.25);
+        o.start(now + t); o.stop(now + t + 0.25);
+      });
+    }
+  });
 }
 
 // ─── Game logic helpers ─────────────────────────────────────────────────
